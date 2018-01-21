@@ -15,10 +15,10 @@
     <text *ngFor="let item of getYAxis(); let i = index" x="80" [attr.y]="item.y">{{item.title}}</text>
     <text [attr.x]="left/2" [attr.y]="(height+top)/2" class="label-title">{{getYAxisTitle()}}</text>
   </g>
-  <g class="data" data-setname="Dataset">
+  <g class="data" *ngFor="let set of getDataSet();let si = index" [attr.fill]="set.color" [attr.data-setname]="set.title">
     <!-- <circle *ngFor="let d of getData();let i = index" [attr.cx]="getDataPosition(d).x" [attr.cy]="getDataPosition(d).y" [attr.data-value]="d.yvalue"
       r="4"></circle> -->
-    <g *ngFor="let d of getData();let i = index">
+    <g *ngFor="let d of getData(set,si);let i = index">
       <rect [attr.x]="getDataX(d)" [attr.y]="getDataY(d)" [attr.height]="getDataHeight(d)" [attr.data-value]="d.yvalue" [attr.width]="getDataWidth(d)"></rect>
     </g>
   </g>

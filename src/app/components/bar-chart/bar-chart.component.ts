@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { IfBarChartData } from 'app/data/if-bar-chart-data';
 import { IfData } from 'app/data/if-data';
+import { IfDataset } from 'app/data/if-dataset';
 
 @Component({
   selector: 'app-bar-chart',
@@ -51,6 +52,14 @@ export class BarChartComponent implements OnInit {
     }
   }
 
+  getAmountOfSets(): number {
+    return this.value.dataset.length;
+  }
+
+  getBarWidth(): number {
+    return this.barwidth * this.value.dataset.length;
+  }
+
   getXAxis(): { title: any, x: number }[] {
     return this.xAxisData;
   }
@@ -69,27 +78,32 @@ export class BarChartComponent implements OnInit {
 
   getDataY(data: IfData): number {
     let oneValue = this.height / this.value.yaxis.stop;
-    return (this.height + this.top) - data.yvalue * oneValue;
+    return (this.height + this.top) - data.yvalue * oneValue - 2;
   }
 
   getDataX(data: IfData): number {
     let x = this.xAxisData.find(s => s.title == data.xvalue).x;
     if (x >= 0) {
-      return x - (this.barwidth / 2);
+      return x - (this.barwidth / 2) + (this.barwidth / this.getAmountOfSets()) * data.setIndex;
     }
     return 0;
   }
 
   getDataWidth(data: IfData): number {
-    return this.barwidth;
+    return this.barwidth / this.getAmountOfSets();
   }
 
   getDataHeight(data: IfData): number {
     return (this.height + this.top) - this.getDataY(data);
   }
 
-  getData(): IfData[] {
-    return this.value.data;
+  getData(set: IfDataset, setIndex: number): IfData[] {
+    set.data.forEach(s => s.setIndex = setIndex);
+    return set.data;
+  }
+
+  getDataSet(): IfDataset[] {
+    return this.value.dataset;
   }
 
   hasData(): boolean {
