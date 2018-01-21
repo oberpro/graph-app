@@ -21,4 +21,4 @@ import { LineChartComponent } from './components/line-chart/line-chart.component
   providers: [],
   bootstrap: [AppComponent]
 })
-export class ChartModule { }
+export class OberproChartModule { }
