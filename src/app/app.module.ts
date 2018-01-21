@@ -5,11 +5,13 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { BarChartComponent } from './components/bar-chart/bar-chart.component';
+import { LineChartComponent } from './components/line-chart/line-chart.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BarChartComponent
+    BarChartComponent,
+    LineChartComponent
   ],
   imports: [
     BrowserModule,
@@ -19,4 +21,4 @@ import { BarChartComponent } from './components/bar-chart/bar-chart.component';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class ChartModule { }

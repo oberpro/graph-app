@@ -17,7 +17,10 @@
   </g>
   <g class="data" *ngFor="let set of getDataSet();let si = index" [attr.fill]="set.color" [attr.data-setname]="set.name">
     <g *ngFor="let d of getData(set,si);let i = index">
-      <rect [attr.x]="getDataX(d)" [attr.y]="getDataY(d)" [attr.height]="getDataHeight(d)" [attr.data-value]="d.yvalue" [attr.width]="getDataWidth(d)"></rect>
+      <circle *ngIf="drawDots" [attr.cx]="getDataX(d)" [attr.cy]="getDataY(d)" [attr.data-value]="d.yvalue" r="4"></circle>
+      <g [attr.stroke]="set.color" *ngIf="drawLines && i>0">
+        <line [attr.x1]="getDataXBefore(set,i)" [attr.x2]="getDataX(d)" [attr.y1]="getDataYBefore(set,i)" [attr.y2]="getDataY(d)"></line>
+      </g>
     </g>
   </g>
   <g class="legend" *ngIf="showLegend">
