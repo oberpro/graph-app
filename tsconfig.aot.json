@@ -9,6 +9,8 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "target": "es5",
+    "removeComments": false,
+    "noImplicitAny": false,
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -16,5 +18,11 @@
       "es2016",
       "dom"
     ]
+  },
+  "angularCompilerOptions": {
+    "skipTemplateCodegen": true,
+    "strictMetadataEmit": true,
+    "flatModuleOutFile": "oberpro-graph-app.js",
+    "flatModuleId": "oberpro-graph-app"
   }
 }
