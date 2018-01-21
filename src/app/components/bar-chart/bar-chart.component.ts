@@ -22,6 +22,8 @@ export class BarChartComponent implements OnInit {
   yAxisStartHeight: number = 0;
   yAxisEndHeight: number = 0;
 
+  showLegend: boolean = true;
+
   @Input("value") set changeValue(value: IfBarChartData) {
     if (value != null) {
       this.value = value;
@@ -108,5 +110,10 @@ export class BarChartComponent implements OnInit {
 
   hasData(): boolean {
     return this.value != null;
+  }
+
+  getLegendY(set: IfDataset, index: number): number {
+    let center: number = this.height / this.getAmountOfSets();
+    return center + (50 * index);
   }
 }

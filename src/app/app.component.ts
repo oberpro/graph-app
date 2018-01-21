@@ -14,6 +14,7 @@ export class AppComponent {
       {
         color: "#2196f3",
         title: "Income",
+        name: "income",
         data: [
           { xvalue: 2011, yvalue: 0 },
           { xvalue: 2012, yvalue: 10 },
@@ -25,6 +26,7 @@ export class AppComponent {
       {
         color: "#f44336",
         title: "costs",
+        name: "costs",
         data: [
           { xvalue: 2011, yvalue: 10 },
           { xvalue: 2012, yvalue: 5 },
