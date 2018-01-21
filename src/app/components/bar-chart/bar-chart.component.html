@@ -1,3 +1,25 @@
-<p>
-  bar-chart works!
-</p>
+<svg *ngIf="hasData()" version="1.2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="graph"
+  aria-labelledby="title" role="img">
+  <title id="title">A line chart showing some information</title>
+  <g class="grid x-grid" id="xGrid">
+    <line [attr.x1]="left" [attr.x2]="left" [attr.y1]="top" [attr.y2]="height+top"></line>
+  </g>
+  <g class="grid y-grid" id="yGrid">
+    <line [attr.x1]="left" [attr.x2]="width+left" [attr.y1]="height+top" [attr.y2]="height+top"></line>
+  </g>
+  <g class="labels x-labels">
+    <text *ngFor="let item of getXAxis(); let i = index" [attr.x]="item.x" [attr.y]="height+top+20">{{item.title}}</text>
+    <text [attr.x]="(left+width)/2" [attr.y]="height+top+20+20" class="label-title">{{getXAxisTitle()}}</text>
+  </g>
+  <g class="labels y-labels">
+    <text *ngFor="let item of getYAxis(); let i = index" x="80" [attr.y]="item.y">{{item.title}}</text>
+    <text [attr.x]="left/2" [attr.y]="(height+top)/2" class="label-title">{{getYAxisTitle()}}</text>
+  </g>
+  <g class="data" data-setname="Dataset">
+    <!-- <circle *ngFor="let d of getData();let i = index" [attr.cx]="getDataPosition(d).x" [attr.cy]="getDataPosition(d).y" [attr.data-value]="d.yvalue"
+      r="4"></circle> -->
+    <g *ngFor="let d of getData();let i = index">
+      <rect [attr.x]="getDataX(d)" [attr.y]="getDataY(d)" [attr.height]="getDataHeight(d)" [attr.data-value]="d.yvalue" [attr.width]="getDataWidth(d)"></rect>
+    </g>
+  </g>
+</svg>
