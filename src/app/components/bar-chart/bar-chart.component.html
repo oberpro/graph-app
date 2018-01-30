@@ -10,11 +10,11 @@
     </g>
     <g class="labels x-labels">
       <text *ngFor="let xLabel of getXAxisLabels(); let i = index" [attr.x]="xLabel.x" [attr.data-value]="xLabel.value" [attr.y]="height">{{xLabel.title}}</text>
-      <text [attr.x]="(width-left)/2" [attr.y]="height-heightOfText" class="label-title">{{xAxisTitle}}</text>
+      <text [attr.x]="(width+left)/2" [attr.y]="height-5" class="label-title">{{xAxisTitle}}</text>
     </g>
     <g class="labels y-labels">
       <text text-anchor="end" *ngFor="let yLabel of getYAxisLabels(); let i = index" [attr.x]="left-5" [attr.y]="yLabel.y" [attr.data-value]="yLabel.value">{{yLabel.title}}</text>
-      <text text-anchor="start" x="0" [attr.y]="(height)/2" class="label-title">{{yAxisTitle}}</text>
+      <text text-anchor="start" x="5" [attr.y]="(height)/2" class="label-title">{{yAxisTitle}}</text>
     </g>
     <!-- TODO -->
     <!-- <g class="data" *ngFor="let set of getDataSet();let si = index" [attr.fill]="set.color" [attr.data-setname]="set.name">
