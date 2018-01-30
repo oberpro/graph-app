@@ -1,119 +1,115 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, AfterContentInit, ViewChild } from '@angular/core';
 import { IfBarChartData } from 'app/data/if-bar-chart-data';
 import { IfData } from 'app/data/if-data';
 import { IfDataset } from 'app/data/if-dataset';
+import { AfterViewInit } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
   selector: 'app-bar-chart',
   templateUrl: './bar-chart.component.html',
   styleUrls: ['./bar-chart.component.scss']
 })
-export class BarChartComponent implements OnInit {
-  private value: IfBarChartData = null;
-  height: number = 300;
-  width: number = 500;
-  left: number = 90;
-  top: number = 10;
-  barwidth: number = 50;
+export class BarChartComponent implements OnInit, AfterViewInit {
+  private data: IfBarChartData = null;
+  chartGenerated: boolean = false;
 
-  yAxisData: { title: any, y: number }[] = [];
-  xAxisData: { title: any, x: number }[] = [];
+  //yAXIS
+  yAxisTitle: string = "Y TITLE";
+  height: number = 100;//DEFAULT HEIGHT
+  heightOfYAxis: number = 0;
+  private heightOffset: number = 5;
+  heightOfText: number = 25;
+  private yAxisFactor: number = 1;
+  private yAxisLabels: { value: number, y: number, title: string }[] = [];
+  left: number = 25;//DEFAULT VALUE -> depends on the max length of the max. yAxisValue
+  private widthOfCharacter: number = 6.5;
 
-  yAxisStartHeight: number = 0;
-  yAxisEndHeight: number = 0;
+  //xAxis
+  width: number = 100;//DEFAULT WIDTH
+  xAxisTitle: string = "X TITLE";
+  private xAxisLabels: { value: number, x: number, title: string }[] = [];
 
-  showLegend: boolean = true;
+  //CHART BOX for height and width calculation
+  @ViewChild("chart") chart: ElementRef;
 
   @Input("value") set changeValue(value: IfBarChartData) {
     if (value != null) {
-      this.value = value;
-      this.init();
+      this.data = value;
+      this.generateChart();
     }
   }
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }
 
-  init() {
-    this.yAxisData = [];
-    this.yAxisStartHeight = this.height + this.top;
-    this.yAxisEndHeight = this.top;
-    let amount: number = Math.floor((this.value.yaxis.stop - this.value.yaxis.start) / this.value.yaxis.steps);
-    for (let i = this.value.yaxis.start; i <= this.value.yaxis.stop; i += this.value.yaxis.steps) {
-      let y: number = this.yAxisStartHeight - ((i / this.value.yaxis.steps) * (this.height / amount)) + 5;
-      this.yAxisData.push({ title: i, y: y });
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      if (this.chart) {
+        let node: HTMLElement = this.chart.nativeElement;
+        let boundaryRect: any = node.getBoundingClientRect();
+        this.height = boundaryRect.height;
+        this.heightOfYAxis = this.height - 50;
+        this.width = boundaryRect.width;
+        this.generateChart();
+      }
+    }, 1);
+  }
+
+  generateChart() {
+    this.chartGenerated = false;
+    let yMinValue: number = 0;
+    let yMaxValue: number = 0;
+    if (this.data) {
+      //Get max y Value
+      this.data.dataset.forEach(set => {
+        set.values.forEach(v => {
+          if (v.y > yMaxValue) {
+            yMaxValue = v.y;
+          }
+        });
+      });
+      //Define y Axis scala
+      let yAxisRange: number = yMaxValue - yMinValue;
+      let yAxisFittingItems: number = Math.ceil((this.heightOfYAxis - this.heightOffset) / this.heightOfText);
+      //create y Axis Scala
+      this.yAxisLabels = [];
+      this.left = this.data.yAxisTitle.length * this.widthOfCharacter;
+      let yAxisMaxLeftDisatance = this.left;
+      let yAxisStep: number = Math.max(Math.ceil(yAxisRange / yAxisFittingItems), 1);
+      this.yAxisFactor = Math.round((this.heightOfYAxis - this.heightOffset) / Math.min(yAxisFittingItems, Math.ceil(yAxisRange / yAxisStep) + 1) / this.heightOfText * 10) / 10;
+      for (let y = 0; y < Math.min(yAxisFittingItems, Math.ceil(yAxisRange / yAxisStep) + 1); y++) {
+        let value: number = Math.ceil(yAxisStep * y);
+        let title: string = value + "";
+        if (title.length * this.widthOfCharacter > yAxisMaxLeftDisatance) {
+          yAxisMaxLeftDisatance = title.length * this.widthOfCharacter;
+        }
+        this.yAxisLabels.push({ value: value, y: (this.heightOfYAxis - this.heightOffset) - (y * this.heightOfText * this.yAxisFactor), title: title });
+      }
+      this.left += yAxisMaxLeftDisatance;
+      //DONE
+      this.chartGenerated = true;
     }
+  }
 
-    this.xAxisData = [];
-    amount = this.value.xaxis.values.length;
-    for (let i = 0; i < this.value.xaxis.values.length; i++) {
-      let v = this.value.xaxis.values[i];
-      let x = this.left + (this.width / (amount - 1) - this.barwidth) * (i) + this.barwidth;
-      this.xAxisData.push({ title: v, x: x });
+  getYAxisLabels(): { value: number, y: number, title: string }[] {
+    if (this.chartGenerated) {
+      return this.yAxisLabels;
     }
+    return [];
   }
 
-  getAmountOfSets(): number {
-    return this.value.dataset.length;
-  }
-
-  getBarWidth(): number {
-    return this.barwidth * this.value.dataset.length;
-  }
-
-  getXAxis(): { title: any, x: number }[] {
-    return this.xAxisData;
-  }
-
-  getYAxis(): { title: any, y: number }[] {
-    return this.yAxisData;
-  }
-
-  getXAxisTitle(): string {
-    return this.value.xaxis.title;
-  }
-
-  getYAxisTitle(): string {
-    return this.value.yaxis.title;
-  }
-
-  getDataY(data: IfData): number {
-    let oneValue = this.height / this.value.yaxis.stop;
-    return (this.height + this.top) - data.yvalue * oneValue - 2;
-  }
-
-  getDataX(data: IfData): number {
-    let x = this.xAxisData.find(s => s.title == data.xvalue).x;
-    if (x >= 0) {
-      return x - (this.barwidth / 2) + (this.barwidth / this.getAmountOfSets()) * data.setIndex;
+  getXAxisLabels(): { value: number, x: number, title: string }[] {
+    if (this.chartGenerated) {
+      return this.xAxisLabels;
     }
-    return 0;
+    return [];
   }
 
-  getDataWidth(data: IfData): number {
-    return this.barwidth / this.getAmountOfSets();
+  amountOfDataSets(): number {
+    return this.data.dataset.length;
   }
 
-  getDataHeight(data: IfData): number {
-    return (this.height + this.top) - this.getDataY(data);
-  }
-
-  getData(set: IfDataset, setIndex: number): IfData[] {
-    set.data.forEach(s => s.setIndex = setIndex);
-    return set.data;
-  }
-
-  getDataSet(): IfDataset[] {
-    return this.value.dataset;
-  }
-
-  hasData(): boolean {
-    return this.value != null;
-  }
-
-  getLegendY(set: IfDataset, index: number): number {
-    let center: number = this.height / this.getAmountOfSets();
-    return center + (50 * index);
-  }
 }
