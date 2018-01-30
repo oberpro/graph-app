@@ -89,6 +89,32 @@ export class BarChartComponent implements OnInit, AfterViewInit {
         this.yAxisLabels.push({ value: value, y: (this.heightOfYAxis - this.heightOffset) - (y * this.heightOfText * this.yAxisFactor), title: title });
       }
       this.left += yAxisMaxLeftDisatance;
+      //create x Axis Scala
+      /*
+        if type of x axis value = number then behaivior like the y Axis
+        if type of x axis value = String then don't show values if overlapping
+        if type of x axis value = Date then show only month and year if overlapping and if this is also overlapping show only year.
+        
+      */
+      this.xAxisLabels = [];
+      let xAxisfirstValue: any = null;
+      this.data.dataset.forEach(set => {
+        if (set.values.length > 0) {
+          xAxisfirstValue = set.values[0].x;
+          return null;
+        }
+      });
+      if (xAxisfirstValue != null) {
+        if (xAxisfirstValue instanceof Number) {
+
+        }
+        if (xAxisfirstValue instanceof String) {
+
+        }
+        if (xAxisfirstValue instanceof Date) {
+
+        }
+      }
       //DONE
       this.chartGenerated = true;
     }
