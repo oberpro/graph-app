@@ -24,7 +24,13 @@ export class AppComponent {
           { x: new Date(2018, 0, 4), y: 15 },
           { x: new Date(2018, 0, 5), y: 5 },
           { x: new Date(2018, 0, 7), y: 30 },
-          { x: new Date(2018, 0, 7), y: 38 }
+          { x: new Date(2018, 0, 8), y: 38 },
+          { x: new Date(2018, 0, 9), y: 37 },
+          { x: new Date(2018, 0, 10), y: 15 },
+          { x: new Date(2018, 0, 11), y: 14 },
+          { x: new Date(2018, 0, 12), y: 11 },
+          { x: new Date(2018, 0, 13), y: 1 },
+          { x: new Date(2018, 0, 14), y: 33 }
         ]
       }
     ]

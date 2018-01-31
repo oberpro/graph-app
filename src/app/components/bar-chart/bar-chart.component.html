@@ -6,22 +6,27 @@
       <line [attr.x1]="left" [attr.x2]="left" y1="0" [attr.y2]="heightOfYAxis"></line>
     </g>
     <g class="grid y-grid" id="yGrid">
-      <line [attr.x1]="left" [attr.x2]="width" [attr.y1]="heightOfYAxis" [attr.y2]="heightOfYAxis"></line>
+      <line [attr.x1]="left" [attr.x2]="widthOfXAxis" [attr.y1]="heightOfYAxis" [attr.y2]="heightOfYAxis"></line>
     </g>
     <g class="labels x-labels">
-      <text *ngFor="let xLabel of getXAxisLabels(); let i = index" [attr.x]="xLabel.x" [attr.data-value]="xLabel.value" [attr.y]="height">{{xLabel.title}}</text>
-      <text [attr.x]="(width+left)/2" [attr.y]="height-5" class="label-title">{{xAxisTitle}}</text>
+      <text *ngFor="let xLabel of getXAxisLabels(); let i = index" [attr.x]="xLabel.x" [attr.data-value]="xLabel.value" [attr.y]="height-30">{{xLabel.title}}</text>
+      <line *ngFor="let xLabel of getXAxisTicks(); let i = index" class="tick" [attr.x1]="xLabel.x+(widthOfItem/2)" [attr.x2]="xLabel.x+(widthOfItem/2)"
+        [attr.y1]="heightOfYAxis" [attr.y2]="heightOfYAxis+5"></line>
+      <text [attr.x]="(widthOfXAxis+left)/2" [attr.y]="height-5" class="label-title">{{xAxisTitle}}</text>
     </g>
     <g class="labels y-labels">
       <text text-anchor="end" *ngFor="let yLabel of getYAxisLabels(); let i = index" [attr.x]="left-5" [attr.y]="yLabel.y" [attr.data-value]="yLabel.value">{{yLabel.title}}</text>
+      <line *ngFor="let yLabel of getYAxisTicks(); let i = index" class="tick" [attr.x1]="left" [attr.x2]="left-5" [attr.y1]="yLabel.y"
+        [attr.y2]="yLabel.y"></line>
       <text text-anchor="start" x="5" [attr.y]="(height)/2" class="label-title">{{yAxisTitle}}</text>
     </g>
-    <!-- TODO -->
-    <!-- <g class="data" *ngFor="let set of getDataSet();let si = index" [attr.fill]="set.color" [attr.data-setname]="set.name">
-    <g *ngFor="let d of getData(set,si);let i = index">
-      <rect [attr.x]="getDataX(d)" [attr.y]="getDataY(d)" [attr.height]="getDataHeight(d)" [attr.data-value]="d.yvalue" [attr.width]="getDataWidth(d)"></rect>
+    <g class="data" *ngFor="let set of getDataSets();let setindex = index" [attr.fill]="set.color" [attr.data-setname]="set.name">
+      <g *ngFor="let item of getDataSet(setindex);let i = index">
+        <rect [attr.x]="getPositionOfItem(setindex,i,item).x" [attr.y]="getPositionOfItem(setindex,i,item).y" [attr.height]="getPositionOfItem(setindex,i,item).h"
+          [attr.data-value]="item.y" [attr.width]="getPositionOfItem(setindex,i,item).w"></rect>
+      </g>
     </g>
-  </g>
+    <!--
   <g class="legend" *ngIf="showLegend">
     <g *ngFor="let set of getDataSet(); let i=index">
       <rect [attr.x]="width+left" width="20" [attr.fill]="set.color" height="20" [attr.y]="getLegendY(set,i)"></rect>
