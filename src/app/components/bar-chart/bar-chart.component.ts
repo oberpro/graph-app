@@ -88,16 +88,17 @@ export class BarChartComponent implements OnInit, AfterViewInit {
       this.yAxisStep = Math.max(Math.ceil(yAxisRange / yAxisFittingItems), 1);
       this.yAxisFactor = Math.round((this.heightOfYAxis - this.heightOffset) / Math.min(yAxisFittingItems, Math.ceil(yAxisRange / this.yAxisStep) + 1) / this.heightOfText * 10) / 10;
       let amountOfYAxisItems: number = Math.min(yAxisFittingItems, Math.ceil(yAxisRange / this.yAxisStep) + 1);
-      this.yAxisPercentage = Math.max((this.heightOfYAxis - this.heightOffset) / Math.max((this.yAxisStep * (amountOfYAxisItems)), 1), 0);
+      let maxValue = (amountOfYAxisItems) * this.yAxisStep;
+      this.yAxisPercentage = ((this.heightOfYAxis - this.heightOffset) / Math.max(maxValue, 1));
       for (let y = 0; y < amountOfYAxisItems; y++) {
         let value: number = Math.ceil(this.yAxisStep * y);
         let title: string = value + "";
         if (title.length * this.widthOfCharacter > yAxisMaxLeftDisatance) {
           yAxisMaxLeftDisatance = title.length * this.widthOfCharacter;
         }
-        let pos: number = (this.heightOfYAxis - this.heightOffset) - (y * this.heightOfText * this.yAxisFactor);
+        let pos: number = (this.heightOfYAxis - this.heightOffset) - (value * this.yAxisPercentage);
         this.yAxisLabels.push({ value: value, y: pos, title: title });
-        this.yAxisTicks.push({ y: pos });
+        this.yAxisTicks.push({ y: pos + 5 });
       }
       this.left += yAxisMaxLeftDisatance;
       //create x Axis Scala
@@ -209,13 +210,18 @@ export class BarChartComponent implements OnInit, AfterViewInit {
 
   getPositionOfItem(setindex: number, index: number, item: { x: any, y: number }): { x: number, y: number, w: number, h: number } {
     if (this.data && this.chartGenerated) {
-      let height: number = Math.max((this.yAxisPercentage * (item.y)), 0);
+      let height: number = Math.max((this.yAxisPercentage * (item.y)), 1);
       let yPos: number = Math.max((this.heightOfYAxis) - height, 0);
-      let width: number = Math.max((this.widthOfItem) / this.amountOfDataSets(), 0);// TODO depends on setindex
-      let xPos: number = Math.max(this.left + width * index, 0);
+      let widthPerSet: number = Math.max((this.widthOfItem) / this.amountOfDataSets(), 0);
+      let width: number = widthPerSet;// TODO depends on setindex
+      let xPos: number = Math.max(this.left + (this.widthOfItem) * index, 0) + (widthPerSet * setindex);
       return { x: xPos, y: yPos, w: width, h: height };
     }
     return { x: 0, y: 0, w: 0, h: 0 };
+  }
+
+  onBarClicked(setindex: number, index: number, item: { x: any, y: number }) {
+    console.log(item, "clicked");
   }
 
 }

@@ -35,6 +35,14 @@
   stroke-width: 1;
 }
 
+.bar {
+  cursor: pointer;
+}
+
+.bar:hover {
+  fill: gray;
+}
+
 .labels {
   font-size: 13px;
 }

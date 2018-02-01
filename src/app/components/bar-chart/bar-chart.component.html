@@ -22,8 +22,8 @@
     </g>
     <g class="data" *ngFor="let set of getDataSets();let setindex = index" [attr.fill]="set.color" [attr.data-setname]="set.name">
       <g *ngFor="let item of getDataSet(setindex);let i = index">
-        <rect [attr.x]="getPositionOfItem(setindex,i,item).x" [attr.y]="getPositionOfItem(setindex,i,item).y" [attr.height]="getPositionOfItem(setindex,i,item).h"
-          [attr.data-value]="item.y" [attr.width]="getPositionOfItem(setindex,i,item).w"></rect>
+        <rect class="bar" [attr.x]="getPositionOfItem(setindex,i,item).x" [attr.y]="getPositionOfItem(setindex,i,item).y" [attr.height]="getPositionOfItem(setindex,i,item).h"
+          [attr.data-value]="item.y" (click)="onBarClicked(setindex,i,item)" [attr.width]="getPositionOfItem(setindex,i,item).w"></rect>
       </g>
     </g>
     <!--
