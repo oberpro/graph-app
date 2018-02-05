@@ -142,6 +142,7 @@ export class BarChartComponent implements OnInit, AfterViewInit {
         if (maxWidthOfItem > maxWidthOfXAxisLabel) {
           xAxisStep = Math.max(Math.ceil(maxWidthOfItem / maxWidthOfXAxisLabel), 1);
         }
+        maxWidthOfItem = Math.min(this.widthOfItem, this.widthOfItem);
         for (let x = 0; x < amountOfItems; x++) {
           let item = this.data.dataset[0].values[x];
           let value: any = item.x;
