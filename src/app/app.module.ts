@@ -19,6 +19,9 @@ import { LineChartComponent } from './components/line-chart/line-chart.component
     HttpModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [
+    BarChartComponent
+  ]
 })
 export class OberproChartModule { }
